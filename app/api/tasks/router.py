@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 
 router = APIRouter(
-    prefix="/tasks/",
+    prefix="/tasks",
     tags=["Tasks"]
 )
 
@@ -21,7 +21,7 @@ async def get_tasks():
     return [{"status": 200, "data": fake_tasks}]
 
 
-@router.get("/{task_id}/")
+@router.get("/{task_id}")
 async def get_specific_task(task_id: int): 
     for task in fake_tasks:
         if task.get("id") == task_id:
