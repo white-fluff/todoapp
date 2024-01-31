@@ -1,9 +1,10 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-class TaskCreate(BaseModel):
+
+class Task(BaseModel):
     id: int
     user_id: int
-    text: str
+    text: str = Field(max_length=150)
     timestamp: datetime
     status: bool = False

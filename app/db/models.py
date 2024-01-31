@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Boolean, TIMESTAMP, String, Integer, Table, Column, MetaData, ForeignKey
 
+
 metadata = MetaData()
 
 users = Table(
