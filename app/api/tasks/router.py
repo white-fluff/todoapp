@@ -9,13 +9,6 @@ router = APIRouter(
 )
 
 
-fake_tasks = [
-    {"id": 1, "user_id": 1, "text": "Some task 1", "timestamp": "2024-01-28 14:00:30.000000", "status": True},
-    {"id": 2, "user_id": 1, "text": "Some task 2", "timestamp": "2024-01-28 14:00:33.000000", "status": True},
-    {"id": 3, "user_id": 1, "text": "Some task 3", "timestamp": "2024-01-28 14:00:39.000000", "status": False}
-]
-
-
 @router.get("")
 async def get_tasks():
     return [{"status": 200, "data": fake_tasks}]
