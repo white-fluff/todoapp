@@ -25,3 +25,12 @@ def update_user(user_id: int) -> dict:
         "success": True,
         "user": user
     }
+
+
+def delete_task(task_id: int) -> dict:
+    user = "fakeUserName"
+    return {
+        "status": 200,
+        "success": True,
+        "user": user
+    }
