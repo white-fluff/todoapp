@@ -8,3 +8,7 @@ class Task(BaseModel):
     text: str = Field(max_length=150)
     timestamp: datetime
     status: bool = False
+
+
+class TaskCreate(BaseModel):
+    pass

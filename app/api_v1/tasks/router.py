@@ -1,5 +1,8 @@
 from fastapi import APIRouter
 
+from . import crud
+from .schemas import Task, TaskCreate
+
 
 router = APIRouter(
     prefix="/tasks",
@@ -9,15 +12,12 @@ router = APIRouter(
 
 @router.get("")
 async def get_tasks():
-    return [{"status": 200, "data": fake_tasks}]
+    pass
 
 
 @router.get("/{task_id}")
 async def get_specific_task(task_id: int): 
-    for task in fake_tasks:
-        if task.get("id") == task_id:
-            return [{"status": 200, "data": task}]
-    return [{"status": 204, "data": "No Content"}]
+    pass
 
 
 # @router.post("")

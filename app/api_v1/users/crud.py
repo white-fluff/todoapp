@@ -2,7 +2,8 @@ from .schema import CreateUser
 
 
 def get_user(user_id: int) -> dict:
-    user = user_id.model_dump()
+    # user = user_id.model_dump()
+    user = "fakeUserName"
     return {
         "user": user
     }
