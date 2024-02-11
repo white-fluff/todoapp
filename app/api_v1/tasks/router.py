@@ -1,6 +1,4 @@
-# from typing import List
 from fastapi import APIRouter
-# from api.tasks.schemas import Task
 
 
 router = APIRouter(
