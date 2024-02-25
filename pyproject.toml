@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "todoapp"
+version = "0.1.0"
+description = ""
+authors = ["Konstantin Belopukhov <konstantin.belopuhov@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.110.0"
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.27"}
+asyncpg = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
