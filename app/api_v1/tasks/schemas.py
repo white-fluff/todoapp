@@ -12,4 +12,7 @@ class Task(BaseModel):
 
 
 class TaskCreate(BaseModel):
-    pass
+    user_id: int
+    text: str = Field(max_length=150)
+    timestamp: datetime
+    status: bool = False

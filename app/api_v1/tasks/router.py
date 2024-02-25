@@ -1,11 +1,12 @@
-from typing import List
+from typing import List, Annotated
 
-from fastapi import APIRouter, Depends, Body, HTTPException, status
+from fastapi import APIRouter, Depends, Path, Body, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import crud
 from .schemas import Task, TaskCreate
+
 from app.db.database import get_async_session
 from app.db.models import tasks
 
@@ -22,12 +23,13 @@ async def get_tasks():
 
 
 @router.get("/{task_id}")
-async def get_specific_task(task_id: int, session: AsyncSession = Depends(get_async_session)) -> List[tuple]:
+async def get_specific_task(
+        task_id: Annotated[int, Path(ge=1, lt=1_000_001)],
+        session: AsyncSession = Depends(get_async_session)
+) -> List[tuple]:
     stmt = select(tasks).where(tasks.c.id == task_id)
     result = await session.execute(stmt)
     task = result.all()
-    print(task)
-    print(type(task))
     return task
 
     # task = await crud.get_task(task_id, session)
@@ -41,10 +43,10 @@ async def get_specific_task(task_id: int, session: AsyncSession = Depends(get_as
     #     detail=f'Task {task_id} not found!'
     # )
 
-# @router.post("")
-# async def create_task(task: List[Task]):
-#     fake_tasks.extend(task)
-#     return {"status": 200, "data": fake_tasks}    
+
+@router.post("")
+async def create_task(task: TaskCreate):
+    return crud.create_task(task_in=task)
 
 
 # @router.put("")
