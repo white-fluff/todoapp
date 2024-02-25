@@ -1,12 +1,13 @@
+
+# from sqlalchemy.engine import Result
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from .schemas import Task, TaskCreate
 
 
-def get_task(task_id: int) -> dict:
-    # task = task_id.model_dump()
-    task = "fakeTask"
-    return {
-        "task": task
-    }
+async def get_task(task_id: int, session: AsyncSession) -> Task | None:
+    # return await session.get(Task, task_id)
+    pass
 
 
 def create_task(task_in: TaskCreate) -> dict:
