@@ -26,34 +26,50 @@ async def get_tasks():
 async def get_specific_task(
         task_id: Annotated[int, Path(ge=1, lt=1_000_001)],
         session: AsyncSession = Depends(get_async_session)
-) -> List[tuple]:
-    stmt = select(tasks).where(tasks.c.id == task_id)
-    result = await session.execute(stmt)
-    task = result.all()
-    return task
+):
+    task = await crud.get_task(task_id, session)
 
-    # task = await crud.get_task(task_id, session)
-    #
-    # if task is not None:
-    #     return task
-    #
+    if task is not None:
+        return {
+            "status": "success",
+            "task": task
+        }
 
-    # raise HTTPException(
-    #     status_code=status.HTTP_404_NOT_FOUND,
-    #     detail=f'Task {task_id} not found!'
-    # )
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f'Task {task_id} not found!'
+    )
 
 
 @router.post("")
-async def create_task(task: TaskCreate):
-    return crud.create_task(task_in=task)
+async def create_task(
+        task: TaskCreate,
+        session: AsyncSession = Depends(get_async_session)
+):
+
+    task = await crud.create_task(new_task=task, session=session)
+
+    if task is not None:
+        return {
+            "status": "success",
+            "task": task
+        }
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f'Internal Server Error\nFailed creation task operation.'
+    )
 
 
 # @router.put("")
 # async def update_task():
-#     pass
+#     return {
+#         "status": "success",
+#         "task": "task"
+#     }
 
-# # Delete task (DELETE)
-# @router.delete("")
-# async def delete_task(task_id):
-#     pass
+
+# Delete task (DELETE)
+@router.delete("/{task_id}")
+async def delete_task(task_id: int, session: AsyncSession = Depends(get_async_session)):
+    return await crud.delete_task(task_id=task_id, session=session)

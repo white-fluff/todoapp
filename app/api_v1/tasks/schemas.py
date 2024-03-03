@@ -12,6 +12,7 @@ class Task(BaseModel):
 
 
 class TaskCreate(BaseModel):
+    id: int
     user_id: int
     text: str = Field(max_length=150)
     timestamp: datetime
