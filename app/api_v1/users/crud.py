@@ -27,7 +27,7 @@ def update_user(user_id: int) -> dict:
     }
 
 
-def delete_task(task_id: int) -> dict:
+def delete_user(user_id: int) -> dict:
     user = "fakeUserName"
     return {
         "status": 200,
