@@ -2,6 +2,21 @@ version: '3.8'
 
 services:
 
+  todo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    image: todo-app:latest
+    restart: unless-stopped
+    container_name: todo-app
+    hostname: todo-app
+    ports:
+      - "80:8080"
+    networks:
+      - todo-net
+
   db:
     image: postgres:latest
     restart: unless-stopped
@@ -14,7 +29,7 @@ services:
     ports:
       - 5432:5432
     networks:
-      - db-network
+      - todo-net
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -27,7 +42,7 @@ services:
     ports:
       - 8081:80
     networks:
-      - db-network
+      - todo-net
 
 networks:
-  db-network:
+  todo-net:
