@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from . import crud
-from .schema import User, CreateUser
+from .schemas import ShowUser, CreateUser
 
 
 router = APIRouter(
@@ -15,7 +15,7 @@ async def create_user(user: CreateUser):
     return crud.create_user(user_in=user)
 
 
-@router.get("/{user_id}")
+@router.get("/{user_id}", response_model=ShowUser)
 async def get_user(user_id: int):
     return 
 

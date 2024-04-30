@@ -1,19 +1,21 @@
+import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 
 
-class Task(BaseModel):
+class ShowTask(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    id: int
+
+    id: uuid.UUID
     user_id: int
-    text: str = Field(max_length=150)
+    text: str
     timestamp: datetime
     status: bool = False
 
 
-class TaskCreate(BaseModel):
-    id: int
-    user_id: int
+class CreateTask(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    user_id: uuid.UUID
     text: str = Field(max_length=150)
-    timestamp: datetime
     status: bool = False

@@ -1,4 +1,4 @@
-from .schema import CreateUser
+from .schemas import ShowUser, CreateUser
 
 
 def get_user(user_id: int) -> dict:

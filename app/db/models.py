@@ -1,28 +1,28 @@
+import uuid
 from datetime import datetime
-from sqlalchemy import Boolean, TIMESTAMP, String, Integer, Table, Column, MetaData, ForeignKey
+from sqlalchemy import Boolean, TIMESTAMP, String, Integer, Table, Column, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+
+from .database import metadata
 
 
-metadata = MetaData()
-
-users = Table(
-    "users",
+user = Table(
+    "user",
     metadata,
-    Column("id", Integer, primary_key=True, index=True, autoincrement=True),
+    Column("id", UUID(as_uuid=True), primary_key=True, unique=True, index=True, ),
     Column("email", String, unique=True, nullable=False),
     Column("username", String, unique=True, nullable=False),
     Column("password", String, nullable=False),
     Column("registered_at", TIMESTAMP, default=datetime.utcnow),
-    Column("is_superuser", Boolean, default=False)
+    Column("is_active", Boolean, default=True)
 )
 
-tasks = Table(
-    "tasks",
+task = Table(
+    "task",
     metadata,
-    Column("id", Integer, primary_key=True, index=True, autoincrement=True),
-    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("task_id", UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4),
+    Column("user_id", UUID(as_uuid=True), ForeignKey("user.id")),
     Column("text", String, nullable=False),
-    Column("timestamp", TIMESTAMP, default=datetime.utcnow),
+    Column("created_at", TIMESTAMP, default=datetime.utcnow),
     Column("status", Boolean, default=False)
 )
-
-

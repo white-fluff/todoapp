@@ -1,14 +1,11 @@
-from typing import List, Annotated
+import uuid
 
 from fastapi import APIRouter, Depends, Path, Body, HTTPException, status
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import crud
-from .schemas import Task, TaskCreate
-
+from .schemas import ShowTask, CreateTask
 from app.db.database import get_async_session
-from app.db.models import tasks
 
 
 router = APIRouter(
@@ -22,9 +19,9 @@ async def get_tasks():
     pass
 
 
-@router.get("/{task_id}")
-async def get_specific_task(
-        task_id: Annotated[int, Path(ge=1, lt=1_000_001)],
+@router.get("/{task_id}", response_model=ShowTask)
+async def get_task_by_id(
+        task_id: uuid.UUID,
         session: AsyncSession = Depends(get_async_session)
 ):
     task = await crud.get_task(task_id, session)
@@ -41,13 +38,13 @@ async def get_specific_task(
     )
 
 
-@router.post("")
+@router.post("", response_model=ShowTask)
 async def create_task(
-        task: TaskCreate,
+        body: CreateTask,
         session: AsyncSession = Depends(get_async_session)
 ):
 
-    task = await crud.create_task(new_task=task, session=session)
+    task = await crud.create_task(new_task=body, session=session)
 
     if task is not None:
         return {

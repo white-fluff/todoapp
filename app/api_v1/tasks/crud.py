@@ -1,18 +1,20 @@
+import uuid
+
 from sqlalchemy import select, insert, delete
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .schemas import Task, TaskCreate
-from app.db.models import tasks
+from .schemas import ShowTask, CreateTask
+from app.db.models import task
 
 
-async def get_task(task_id: int, session: AsyncSession) -> Task | None:
-    stmt = select(tasks).where(tasks.c.id == task_id)
-    task = await session.execute(stmt)
+async def get_task(task_id: uuid.UUID, session: AsyncSession) -> ShowTask:
+    stmt = select(task).where(task.c.id == task_id)
+    specific_task = await session.execute(stmt)
 
-    task_tuple = task.all()[0]
+    task_tuple = specific_task.all()[0]
 
-    return Task(
+    return ShowTask(
         id=task_tuple[0],
         user_id=task_tuple[1],
         text=task_tuple[2],
@@ -21,12 +23,19 @@ async def get_task(task_id: int, session: AsyncSession) -> Task | None:
     )
 
 
-async def create_task(new_task: TaskCreate, session: AsyncSession) -> dict | None:
-    stmt = insert(tasks).values(**new_task.dict())  # bad temporary solution
+async def create_task(new_task: CreateTask, session: AsyncSession) -> ShowTask:
+    stmt = insert(task).values(**new_task.dict())
     await session.execute(stmt)
     await session.commit()
 
-    return new_task.dict()
+
+    return ShowTask(
+        # id=
+        # user_id=
+        # text=
+        # timestamp=
+        # status=
+    )
 
 
 async def update_task(task_id: int) -> dict:
@@ -35,7 +44,7 @@ async def update_task(task_id: int) -> dict:
 
 async def delete_task(task_id: int, session: AsyncSession) -> dict:
     try:
-        stmt = delete(tasks).where(tasks.c.id == task_id)
+        stmt = delete(task).where(task.c.id == task_id)
         result = await session.execute(stmt)
         num_deleted = result.rowcount
         await session.commit()
