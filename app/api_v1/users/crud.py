@@ -1,12 +1,13 @@
+from datetime import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.hashing import HashPass
 from .schemas import ShowUser, CreateUser
-from app.db.models import user
+from app.db.models import User
 
 
 def get_user(user_id: int) -> dict:
-    # user = user_id.model_dump()
     user = "fakeUserName"
     return {
         "user": user
@@ -15,20 +16,21 @@ def get_user(user_id: int) -> dict:
 
 async def create_user(body: CreateUser, session: AsyncSession) -> ShowUser:
     # user = user_in.model_dump()
-    # async with session.begin():
-    new_user = user(
-        email=body.email,
-        username=body.username,
-        password=HashPass.hash_password(body.password)
-    )
-    session.add(new_user)
-    await session.flush()
+    async with session.begin():
+        new_user = User(
+            email=body.email,
+            username=body.username,
+            password=HashPass.hash_password(body.password)
+        )
+
+        session.add(new_user)
+        await session.flush()
 
     return ShowUser(
         id=new_user.id,
         email=new_user.email,
-        username=new_user.usernamem,
-        registered_at=new_user.registered_at,
+        username=new_user.username,
+        registered_at=new_user.registered_at.strftime("%Y-%m-%d %H:%M:%S.%f"),
         is_active=new_user.is_active
     )
 

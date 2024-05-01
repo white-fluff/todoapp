@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .schemas import ShowTask, CreateTask
-from app.db.models import task
+from app.db.models import Task
 
 
 async def get_task(task_id: uuid.UUID, session: AsyncSession) -> ShowTask:
@@ -24,18 +24,19 @@ async def get_task(task_id: uuid.UUID, session: AsyncSession) -> ShowTask:
 
 
 async def create_task(new_task: CreateTask, session: AsyncSession) -> ShowTask:
-    stmt = insert(task).values(**new_task.dict())
-    await session.execute(stmt)
-    await session.commit()
-
-
-    return ShowTask(
-        # id=
-        # user_id=
-        # text=
-        # timestamp=
-        # status=
-    )
+    pass
+    # stmt = insert(task).values(**new_task.dict())
+    # await session.execute(stmt)
+    # await session.commit()
+    #
+    #
+    # return ShowTask(
+    #     # id=
+    #     # user_id=
+    #     # text=
+    #     # timestamp=
+    #     # status=
+    # )
 
 
 async def update_task(task_id: int) -> dict:
