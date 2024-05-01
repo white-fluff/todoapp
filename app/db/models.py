@@ -9,7 +9,7 @@ from .database import metadata
 user = Table(
     "user",
     metadata,
-    Column("id", UUID(as_uuid=True), primary_key=True, unique=True, index=True, ),
+    Column("id", UUID(as_uuid=True), primary_key=True, unique=True, index=True, default=uuid.uuid4),
     Column("email", String, unique=True, nullable=False),
     Column("username", String, unique=True, nullable=False),
     Column("password", String, nullable=False),

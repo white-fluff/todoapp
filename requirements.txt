@@ -33,6 +33,7 @@ MarkupSafe==2.1.5
 more-itertools==10.2.0
 msgpack==1.0.7
 packaging==23.2
+passlib==1.7.4
 pexpect==4.9.0
 pkginfo==1.9.6
 platformdirs==4.2.0

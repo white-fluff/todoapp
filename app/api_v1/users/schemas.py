@@ -22,7 +22,7 @@ class ShowUser(BaseModel):
 class CreateUser(BaseModel):
     username: str = Field(max_length=15)
     email: EmailStr
-    password: str = Field(max_length=50)
+    password: str = Field(max_length=100)
 
     @classmethod
     @field_validator("username")
