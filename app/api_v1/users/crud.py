@@ -1,21 +1,15 @@
-from datetime import datetime
+import uuid
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from asyncpg.exceptions import UniqueViolationError
 
 from app.hashing import HashPass
 from .schemas import ShowUser, CreateUser
 from app.db.models import User
 
 
-def get_user(user_id: int) -> dict:
-    user = "fakeUserName"
-    return {
-        "user": user
-    }
-
-
-async def create_user(body: CreateUser, session: AsyncSession) -> ShowUser:
-    # user = user_in.model_dump()
+async def create_user(body: CreateUser, session: AsyncSession) -> ShowUser | None:
     async with session.begin():
         new_user = User(
             email=body.email,
@@ -24,7 +18,10 @@ async def create_user(body: CreateUser, session: AsyncSession) -> ShowUser:
         )
 
         session.add(new_user)
-        await session.flush()
+        try:
+            await session.flush()
+        except UniqueViolationError:
+            return None
 
     return ShowUser(
         id=new_user.id,
@@ -35,19 +32,46 @@ async def create_user(body: CreateUser, session: AsyncSession) -> ShowUser:
     )
 
 
-def update_user(user_id: int) -> dict:
-    user = user_id.model_dump()
-    return {
-        "status": 200,
-        "success": True,
-        "user": user
-    }
+async def get_user_by_username(username: str, session: AsyncSession) -> ShowUser | None:
+    async with session.begin():
+        stmt = select(User).where(User.username == username)
+        resp_user = await session.execute(stmt)
+        user_row = resp_user.fetchone()
+
+        if user_row is None:
+            return None
+        else:
+            return ShowUser(
+                id=user_row[0].id,
+                email=user_row[0].email,
+                username=user_row[0].username,
+                registered_at=user_row[0].registered_at.strftime("%Y-%m-%d %H:%M:%S.%f"),
+                is_active=user_row[0].is_active
+            )
 
 
-def delete_user(user_id: int) -> dict:
-    user = "fakeUserName"
-    return {
-        "status": 200,
-        "success": True,
-        "user": user
-    }
+async def get_user_by_id(user_id: str, session: AsyncSession) -> ShowUser | None:
+    uuid_id = uuid.UUID(user_id)
+    async with session.begin():
+        stmt = select(User).where(User.id == uuid_id)
+        resp_user = await session.execute(stmt)
+        user_row = resp_user.fetchone()
+
+        if user_row is None:
+            return None
+        else:
+            return ShowUser(
+                id=user_row[0].id,
+                email=user_row[0].email,
+                username=user_row[0].username,
+                registered_at=user_row[0].registered_at.strftime("%Y-%m-%d %H:%M:%S.%f"),
+                is_active=user_row[0].is_active
+            )
+
+
+async def update_user(user_id: int) -> ShowUser:
+    pass
+
+
+async def delete_user(user_id: int) -> ShowUser:
+    pass

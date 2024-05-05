@@ -30,30 +30,3 @@ class Task(Base):
     status = Column(Boolean, default=False)
 
     user = relationship("User", back_populates="tasks")
-
-
-# # new_user = user(
-# #                ^^^^^
-# # TypeError: 'Table' object is not callable
-#
-#
-# user = Table(
-#     "user",
-#     metadata,
-#     Column("id", UUID(as_uuid=True), primary_key=True, unique=True, index=True, default=uuid.uuid4),
-#     Column("email", String, unique=True, nullable=False),
-#     Column("username", String, unique=True, nullable=False),
-#     Column("password", String, nullable=False),
-#     Column("registered_at", TIMESTAMP, default=datetime.utcnow),
-#     Column("is_active", Boolean, default=True)
-# )
-#
-# task = Table(
-#     "task",
-#     metadata,
-#     Column("task_id", UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4),
-#     Column("user_id", UUID(as_uuid=True), ForeignKey("user.id")),
-#     Column("text", String, nullable=False),
-#     Column("created_at", TIMESTAMP, default=datetime.utcnow),
-#     Column("status", Boolean, default=False)
-# )
